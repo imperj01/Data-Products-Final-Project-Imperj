@@ -1,0 +1,82 @@
+---
+title: "Data Products Final Project Presentation"
+author: "Joseph Imperato"
+date: "4/30/2020"
+output: ioslides_presentation
+---
+
+```{r setup,warning=FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Interactive Graphing and Data Analysis
+
+#### The Application Delivers the Capability to **Dynamically Input Values**
+- The Number of Individuals for Each Group can be Continually Updated
+- The Graphs will then be **Automatically Updated** Every Time a new Count is Inputted
+- The Application Enables the Ability to Change the Age Range of the Population
+- A Random Set People will be added to Each Group based on Count and Age Range Selected
+- Each Group will be Divided up into Quartiles and the Graphs will be **Dynamically Updated**
+
+## Ability to Continually Update Group Counts
+
+#### The Application Provides Ability to Update Population Counts for 2 Graphs
+- Provides **2 Different Sections** to Update Populations
+- Each Population Section will Automatically Update the Associated Graph
+- *Below is a Sample of the Population Input Sections*
+
+```{r,warning= FALSE, echo = FALSE}
+temp <- readline(prompt = "Input Number of People for Group 1 - minimum 50 and maximum 1000: ")
+temp2 <- readline(prompt = "Input Number of People for Group 2 - minimum 50 and maximum 1000: ")
+
+```
+#### *There is also the Ability to Change the Age Range of the Groups*
+
+## Dynamic Graphs
+#### Ages of Individuals Randomly Generated
+#### Graphs Based on the Quartile of the Age Range
+
+```{r,warning= FALSE, echo = FALSE}
+
+number_of_points1 = 400
+number_of_points2 = 600
+
+    min1 <- 45
+    max1 <- 95
+    range <- max1-min1
+    
+    q1 <- min1+range*1/4
+    q2 <- min1 + range *1/2
+    q3 <- min1 + range *3/4
+    data1 <- runif(number_of_points1, min1, max1)
+    d1age <-as.data.frame(data1)
+    d1age$group <- ifelse(d1age$data1 >= min1 & d1age$data1 < q1, "1st Q", ifelse(d1age$data1 >= q1 & d1age$data1 < q2, "2nd Q", ifelse(d1age$data1 >= q1 & d1age$data1 < q3, "3rd Q","4th Q")))
+    tab_d1age<-(table(d1age$group))
+    
+data2 <- runif(number_of_points2, min1, max1)
+    d2age <-as.data.frame(data2)
+    d2age$group <- ifelse(d2age$data2 >= min1 & d2age$data2 < q1, "1st Q", ifelse(d2age$data2 >= q1 & d2age$data2 < q2, "2nd Q", ifelse(d2age$data2 >= q2 & d2age$data2 < q3, "3rd Q", "4th  Q")))
+    tab_d2age<-(table(d2age$group))
+
+main1 = paste('Minumum Age is', min1, 'Maximum Age is', max1)
+    ylab1 = paste('Frequency of Quartile for Patient Count', number_of_points1)
+    ylab2 = paste('Frequency of Quartile for Patient Count', number_of_points2)
+
+   
+     par(mfrow = c(1,2))
+     
+  plot(tab_d1age,xlab = "Age Range Quartiles", ylab = ylab1,main = main1 , col = "green", type = "h", lwd = "8",cex.lab =.7,cex.axis = .7,cex.main=.9,cex=.7)
+    
+  plot(tab_d2age,xlab = "Age Range Quartiles", ylab = ylab2, main = main1, col = "blue", type = "h", lwd = "8",cex.lab=.7,cex.axis = .7,cex.main=.9,cex=.7)
+``` 
+
+## Statistical Analysis
+#### Chi Square Test Run to Determine Independence of 2 Groups
+
+```{r,warning= FALSE, echo = TRUE}
+
+chisq.test(tab_d1age,tab_d2age)
+```
+
+#### As Expected P value > .05 (Fail to Reject Null Hypothesis)
+#### Demonstrating that the Data Sets are Independent
